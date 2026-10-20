@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>상담 신청</title>
+<meta name="description" content="학생 상담 시간 신청 페이지">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fffaf0; --card:#ffffff; --ink:#3b2f4a; --sub:#6e6080; --line:#e4d9fb; --yellow:#fbe7a1; --yellow-soft:#fff5d3; --orange:#ff8fbf; --orange-soft:#ffe3ef; --green:#9ed36a; --green-soft:#eaf7d9; --green-mid:#c4e8a0; --green-deep:#3f7d1f; --lav:#ede5ff; --lav-mid:#c9b6f5; --lav-deep:#6a4bc4; --ok:#1f8a5b; --ok-soft:#dcf5e8; --warn:#c01f5b; --warn-soft:#ffe0ec; --heading:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); background-image:radial-gradient(var(--yellow-soft) 2px,transparent 2px); background-size:26px 26px; color:var(--ink); font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif; font-size:17px; line-height:1.6; }
+  button, input, textarea { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  .wrap { max-width:760px; margin:0 auto; padding:22px 16px 64px; }
+  .hero { background:#cdeeb0; border-radius:26px; padding:22px 22px 20px; margin-bottom:18px; box-shadow:0 6px 0 #9ed36a; position:relative; overflow:hidden; }
+  .hero::after { content:"💬"; position:absolute; right:16px; top:10px; font-size:30px; opacity:.9; transform:rotate(8deg); }
+  .hero .sub { padding-right:0; margin-bottom:26px; }
+  h1 { font-family:var(--heading); font-weight:400; font-size:30px; padding-right:40px; margin:0 0 6px; color:#3b2f4a; }
+  .sub { color:#2f4a2a; font-size:16px; margin:0; max-width:34em; }
+  .sub b { background:#fff; border-radius:8px; padding:0 6px; }
+  .card { background:var(--card); border:2px solid var(--line); border-radius:22px; padding:18px; margin-bottom:18px; box-shadow:0 5px 0 var(--lav); }
+  .step { display:inline-flex; align-items:center; gap:8px; font-family:var(--heading); font-size:21px; margin:0 0 12px; }
+  .step i { font-style:normal; background:var(--lav-deep); color:#fff; width:30px; height:30px; border-radius:50%; display:inline-grid; place-items:center; font-size:17px; }
+  .cal-head { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:12px; }
+  .cal-head b { font-family:var(--heading); font-weight:400; font-size:23px; min-width:130px; text-align:center; }
+  .arrow { width:44px; height:44px; border-radius:50%; border:2px solid var(--lav-mid); background:var(--lav); color:var(--lav-deep); font-size:16px; }
+  .arrow:active { background:var(--lav-mid); }
+  .grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .dow { text-align:center; font-size:15px; font-weight:800; color:var(--lav-deep); padding:4px 0; }
+  .dow:first-child { color:#e0457b; }
+  .day { border:2px solid var(--line); border-radius:14px; min-height:66px; padding:5px 1px; background:#fff; text-align:center; font-size:16px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .day.off { background:#faf7ff; color:#c3b8d8; border-color:#f0eaff; cursor:default; font-weight:400; }
+  .day.has { border-color:var(--orange); background:var(--orange-soft); }
+  .day.sel { background:var(--yellow); border-color:var(--lav-deep); box-shadow:0 0 0 3px var(--lav-mid); }
+  .day.today .n { background:var(--lav-deep); color:#fff; border-radius:999px; padding:0 8px; }
+  .day .cnt { display:block; white-space:nowrap; color:#c2185b; font-weight:800; font-size:12px; line-height:1.2; }
+  .day.sel .cnt { color:#3b2f4a; }
+  #slotCard { position:relative; background:var(--green-soft); border-color:var(--green); box-shadow:0 5px 0 var(--green-mid); }
+  #slotCard .step i { background:var(--green-deep); }
+  #slotCard input, #slotCard textarea { border-color:var(--green); }
+  #slotCard input:focus, #slotCard textarea:focus { border-color:var(--green-deep); box-shadow:0 0 0 3px var(--green-mid); }
+  #send { background:var(--green); }
+  .slots { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; margin-top:6px; }
+  .slot { border:2px solid var(--green); background:#fff; border-radius:16px; padding:12px 14px; text-align:left; }
+  .slot b { display:block; font-size:19px; }
+  .slot span { font-size:15px; color:var(--sub); }
+  .slot.sel { border-color:var(--green-deep); background:var(--green-mid); box-shadow:0 0 0 3px var(--green); }
+  .slot.full { background:#f1f4ee; border-color:#dfe6d8; color:#a79bbd; cursor:not-allowed; }
+  label { display:block; font-size:16px; font-weight:800; margin-top:14px; }
+  input, textarea { width:100%; margin-top:6px; border:2px solid var(--lav-mid); border-radius:14px; padding:12px 14px; font-size:18px; background:#fff; }
+  input:focus, textarea:focus { outline:none; border-color:var(--lav-deep); box-shadow:0 0 0 3px var(--lav); }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .btn { background:var(--yellow); color:#3b2f4a; border:2px solid #3b2f4a; border-radius:16px; padding:14px 18px; font-size:19px; font-weight:800; width:100%; margin-top:18px; box-shadow:0 4px 0 #3b2f4a; }
+  .btn:active { transform:translateY(3px); box-shadow:0 1px 0 #3b2f4a; }
+  .btn.sec { background:var(--lav); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .msg { font-size:16px; margin-top:12px; padding:12px 14px; border-radius:14px; font-weight:600; }
+  .msg.ok { background:var(--ok-soft); color:var(--ok); }
+  .msg.err { background:var(--warn-soft); color:var(--warn); }
+  .hint { font-size:14.5px; color:var(--sub); margin:6px 0 0; }
+  .req { border:2px solid var(--line); background:#fcfaff; border-radius:16px; padding:12px 14px; margin-top:10px; display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; }
+  .deco { position:absolute; font-size:22px; opacity:.85; }
+  .tag { font-size:14.5px; font-weight:800; padding:3px 12px; border-radius:999px; background:var(--yellow-soft); color:#7a5a00; }
+  .tag.승인 { background:var(--ok-soft); color:var(--ok); }
+  .tag.거절, .tag.취소 { background:var(--warn-soft); color:var(--warn); }
+  .small { border:2px solid var(--lav-mid); background:#fff; border-radius:10px; padding:5px 12px; font-size:15px; font-weight:700; }
+  details summary { cursor:pointer; font-family:var(--heading); font-size:21px; }
+  @media (max-width:420px) { .row { grid-template-columns:1fr; } .grid { gap:4px; } .day { min-height:60px; font-size:15px; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <span class="deco" style="right:64px;bottom:10px">🌸</span><span class="deco" style="right:18px;bottom:8px;font-size:28px">💖</span><span class="deco" style="right:108px;bottom:12px;font-size:18px">✨</span>
+    <h1 id="title">🐥 상담 신청</h1>
+    <p class="sub">👆 날짜를 누르고 가능한 시간을 골라 신청하세요. 선생님이 <b>승인하면 확정</b>돼요. 맨 아래 "내 신청 확인"에서 결과를 볼 수 있어요.</p>
+  </div>
+  <div id="top"></div>
+
+  <div class="card">
+    <div class="step"><i>1</i>📅 날짜를 골라요</div>
+    <div class="cal-head"><button class="arrow" id="prev" aria-label="이전 달">◀</button><b id="monthLabel"></b><button class="arrow" id="next" aria-label="다음 달">▶</button></div>
+    <div class="grid" id="cal"></div>
+    <p class="hint" style="text-align:center">🌸 숫자 = 남은 자리 · 😢 = 마감 · 회색 날짜는 상담이 없는 날</p>
+  </div>
+
+  <div class="card" id="slotCard" hidden>
+    <div class="step"><i>2</i><span id="slotTitle"></span></div>
+    <div class="slots" id="slots"></div>
+    <div id="formBox" hidden>
+      <div class="step" style="margin-top:16px"><i>3</i>🌱 내 정보를 적어요</div>
+      <div class="row">
+        <label>🍀 학번<input id="no" inputmode="numeric" maxlength="6" placeholder="예: 10107" autocomplete="off"></label>
+        <label>🐸 이름<input id="name" maxlength="10" autocomplete="off"></label>
+      </div>
+      <label>🌿 상담하고 싶은 내용 (선택)<textarea id="topic" rows="3" maxlength="200" placeholder="예: 진로 고민이 있어요"></textarea></label>
+      <label>🥝 확인용 비밀번호 (숫자 4자리)<input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+      <p class="hint">🍃 신청 결과를 확인하거나 취소할 때 필요해요. 친구에게 알려주지 마세요.</p>
+      <button class="btn" id="send">🍀 신청하기</button>
+      <div id="sendMsg"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <details id="myDet">
+      <summary>🔍 내 신청 확인 · 취소</summary>
+      <div class="row">
+        <label>🎓 학번<input id="mno" inputmode="numeric" maxlength="6" autocomplete="off"></label>
+        <label>🙂 이름<input id="mname" maxlength="10" autocomplete="off"></label>
+      </div>
+      <label>🔑 확인용 비밀번호<input id="mpin" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+      <button class="btn sec" id="mcheck">👀 확인하기</button>
+      <div id="mlist"></div>
+    </details>
+  </div>
+</div>
+
+<script>
+/* 웹 앱 주소는 선생님 프로그램이 만들어 주는 '학생용 링크'(?a=...)로 전달됩니다.
+   링크 대신 이 파일에 고정하려면 아래 따옴표 안에 웹 앱 주소를 넣으세요. */
+const API_FIXED = "";
+const API = new URLSearchParams(location.search).get("a") || API_FIXED;
+const $ = id => document.getElementById(id);
+const DOW = "일월화수목금토";
+const pad = n => String(n).padStart(2, "0");
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+let slots = [], month = new Date(), selDate = "", selSlot = null;
+month.setDate(1);
+
+const msg = (box, text, ok) => { box.innerHTML = ""; if (!text) return; const d = document.createElement("div"); d.className = "msg " + (ok ? "ok" : "err"); d.textContent = text; box.appendChild(d); };
+
+async function get() { const r = await fetch(`${API}${API.includes("?") ? "&" : "?"}t=${Date.now()}`); return r.json(); }
+async function post(o) { const r = await fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(o) }); return r.json(); }
+
+async function load() {
+  if (!API) { msg($("top"), "신청 주소가 연결되지 않았어요. 선생님께 받은 링크로 다시 접속해 주세요.", false); return; }
+  $("cal").innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6e6080;font-size:17px;padding:28px 0">🐣 달력을 불러오는 중…</p>';
+  try {
+    const j = await get();
+    if (!j.ok) throw new Error(j.error || "불러오기 실패");
+    slots = j.slots || [];
+    if (j.title) { $("title").textContent = "🐥 " + j.title; document.title = j.title; }
+    if (j.rosterOn) $("top").dataset.roster = "1";
+    // 가장 가까운 상담 가능 날짜의 달을 먼저 보여주기
+    const first = slots.filter(s => !s.taken).map(s => s.date).sort()[0];
+    if (first) { month = new Date(first + "T00:00:00"); month.setDate(1); }
+    if (first && !selDate) selDate = first;
+    drawCal(); drawSlots();
+  } catch (e) { msg($("top"), "시간표를 불러오지 못했어요: " + e.message, false); }
+}
+
+function drawCal() {
+  const y = month.getFullYear(), m = month.getMonth();
+  $("monthLabel").textContent = `🌼 ${y}년 ${m + 1}월`;
+  const cal = $("cal"); cal.innerHTML = "";
+  [...DOW].forEach(d => { const e = document.createElement("div"); e.className = "dow"; e.textContent = d; cal.appendChild(e); });
+  const lead = new Date(y, m, 1).getDay(), dim = new Date(y, m + 1, 0).getDate(), today = ymd(new Date());
+  for (let i = 0; i < lead; i++) cal.appendChild(document.createElement("div"));
+  for (let d = 1; d <= dim; d++) {
+    const ds = `${y}-${pad(m + 1)}-${pad(d)}`, open = slots.filter(s => s.date === ds && !s.taken).length, all = slots.filter(s => s.date === ds).length;
+    const b = document.createElement("button");
+    b.className = "day" + (all ? " has" : " off") + (ds === selDate ? " sel" : "") + (ds === today ? " today" : "");
+    b.innerHTML = `<span class="n">${d}</span>` + (all ? `<span class="cnt">${open ? "🌸" + open : "😢"}</span>` : "");
+    if (all) b.onclick = () => { selDate = ds; selSlot = null; drawCal(); drawSlots(); };
+    cal.appendChild(b);
+  }
+}
+
+function drawSlots() {
+  $("slotCard").hidden = !selDate;
+  if (!selDate) return;
+  const d = new Date(selDate + "T00:00:00");
+  $("slotTitle").textContent = `${d.getMonth() + 1}월 ${d.getDate()}일 (${DOW[d.getDay()]}) 시간을 골라요 🍀`;
+  const box = $("slots"); box.innerHTML = "";
+  slots.filter(s => s.date === selDate).sort((a, b) => a.start.localeCompare(b.start)).forEach(s => {
+    const b = document.createElement("button");
+    b.className = "slot" + (s.taken ? " full" : "") + (selSlot && selSlot.id === s.id ? " sel" : "");
+    b.innerHTML = `<b>${s.taken ? "🔒" : "🌿"} ${s.start} ~ ${s.end}</b><span>${s.name || "상담"}${s.taken ? " · 마감" : " · 신청 가능"}</span>`;
+    if (!s.taken) b.onclick = () => { selSlot = s; drawSlots(); };
+    box.appendChild(b);
+  });
+  $("formBox").hidden = !selSlot;
+  msg($("sendMsg"), "");
+}
+
+$("prev").onclick = () => { month.setMonth(month.getMonth() - 1); drawCal(); };
+$("next").onclick = () => { month.setMonth(month.getMonth() + 1); drawCal(); };
+
+$("send").onclick = async () => {
+  if (!selSlot) return;
+  const no = $("no").value.trim(), name = $("name").value.trim(), pin = $("pin").value.trim();
+  if (!/^\d{1,6}$/.test(no) || !name) return msg($("sendMsg"), "학번(숫자)과 이름을 입력해 주세요.", false);
+  if (!/^\d{4}$/.test(pin)) return msg($("sendMsg"), "확인용 비밀번호는 숫자 4자리예요.", false);
+  $("send").disabled = true; msg($("sendMsg"), "⏳ 신청 중…", true);
+  try {
+    const j = await post({ action: "reserve", slotId: selSlot.id, no, name, topic: $("topic").value.trim(), pin });
+    if (!j.ok) throw new Error(j.error || "신청 실패");
+    $("topic").value = ""; $("pin").value = "";
+    $("mno").value = no; $("mname").value = name;
+    selSlot = null; await load(); drawSlots(); $("formBox").hidden = true;
+    msg($("sendMsg"), "🍀 신청이 접수됐어요! 선생님이 승인하면 확정됩니다. 아래 '내 신청 확인'에서 결과를 볼 수 있어요.", true);
+    $("slotCard").hidden = false; $("sendMsg").scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (e) { msg($("sendMsg"), e.message, false); await load(); drawSlots(); $("formBox").hidden = !selSlot; }
+  $("send").disabled = false;
+};
+
+async function myList() {
+  const no = $("mno").value.trim(), name = $("mname").value.trim(), pin = $("mpin").value.trim(), box = $("mlist");
+  box.innerHTML = "";
+  if (!/^\d{1,6}$/.test(no) || !name || !/^\d{4}$/.test(pin)) return msg(box, "학번, 이름, 비밀번호(4자리)를 입력해 주세요.", false);
+  try {
+    const j = await post({ action: "status", no, name, pin });
+    if (!j.ok) throw new Error(j.error);
+    if (!j.reqs.length) return msg(box, "📭 신청 내역이 없어요.", true);
+    j.reqs.forEach(r => {
+      const d = document.createElement("div"); d.className = "req";
+      const l = document.createElement("div"); l.innerHTML = `<b>${r.date} ${r.start}~${r.end}</b> <span class="hint">${r.slot || ""}</span>${r.topic ? `<div class="hint"></div>` : ""}`;
+      if (r.topic) l.lastChild.textContent = r.topic;
+      const rt = document.createElement("div"); rt.style.cssText = "display:flex;gap:8px;align-items:center";
+      const t = document.createElement("span"); t.className = "tag " + r.status; t.textContent = r.status === "대기" ? "⏳ 승인 대기" : r.status === "승인" ? "🍀 승인" : r.status === "거절" ? "❌ 거절" : r.status === "취소" ? "🚫 취소" : r.status; rt.appendChild(t);
+      if (r.note && r.status !== "대기") { const n = document.createElement("span"); n.className = "hint"; n.textContent = r.note; rt.appendChild(n); }
+      if (r.status === "대기" || r.status === "승인") {
+        const c = document.createElement("button"); c.className = "small"; c.textContent = "🗑️ 취소";
+        c.onclick = async () => { if (!confirm("이 신청을 취소할까요?")) return; try { const x = await post({ action: "cancel", id: r.id, no, pin }); if (!x.ok) throw new Error(x.error); await load(); drawSlots(); myList(); } catch (e) { msg(box, e.message, false); } };
+        rt.appendChild(c);
+      }
+      d.append(l, rt); box.appendChild(d);
+    });
+  } catch (e) { msg(box, e.message || "확인하지 못했어요.", false); }
+}
+$("mcheck").onclick = myList;
+load();
+</script>
+</body>
+</html>
